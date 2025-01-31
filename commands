@@ -1,0 +1,64 @@
+
+source /opt/ros/humble/setup.bash
+sudo apt get-update 
+sudo apt get-upgrade 
+
+
+Restart the PC
+
+
+source /opt/ros/humble/setup.bash
+sudo apt-get install gedit 
+sudo apt install ros-humble-joint-state-publisher
+sudo apt install ros-humble-joint-state-publisher-gui 
+sudo apt install ros-humble-xacro
+sudo apt-get install ros-humble-ros-gz
+sudo apt install ros-humble-gazebo-ros-pkgs
+sudo apt install ros-humble-ros-core
+sudo apt install ros-humble-geometry2
+sudo apt-get install ros-humble-gazebo-msgs
+sudo apt-get install ros-humble-gazebo-plugins
+sudo apt-get install ros-humble-ros-ign-bridge
+sudo apt get install ros-humble-teleop-twist-keyboard
+
+create the workspace folder
+create the src folder 
+go to workspace folder 
+colcon build
+go to src folder 
+ros2 pkg create --build-type ament_cmake driverless_robot
+go to driverless_robot
+mkdir launch model
+go to the workspace 
+colcon build
+
+go to the model folder inside the src folder
+gedit robot.xacro
+gedit robot.gazebo
+
+
+go to the launch folder 
+gedit gazebo_model.launch.py
+
+go to src/driverless_robot
+gedit package.xml
+gedit CMakeLists.txt
+
+
+add above if(BUILD_TESTING)....:
+install(
+    DIRECTORY launch_model
+    DESTINATION share/${PROJECT_NAME}
+)
+
+
+go to the workspace
+colcon build 
+
+source ~/ws_driverless/install/setup.bash
+ros2 launch driverless_robot gazebo_model.launch.py
+
+new terminal 
+source /opt/ros/humble/setup.bash
+source ~/ws_driverless/install/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
