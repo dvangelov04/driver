@@ -28,7 +28,7 @@
 <gazebo>
 <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
     <ros>
-        <namespace></namespace>
+        <namespace> </namespace>
     </ros>
     <num_wheel_pairs>1</num_wheel_pairs>
 
@@ -37,7 +37,8 @@
 
     <wheel_separation>${body_link_y_dim+wheel_link_length}</wheel_separation>
 
-    <wheel_diameter>${wheel_link_radius}</wheel_diameter>
+
+    <wheel_diameter>2*${wheel_link_radius}</wheel_diameter>
 
     <max_wheel_torque>1000</max_wheel_torque>
     <max_wheel_acceleration>5.0</max_wheel_acceleration>

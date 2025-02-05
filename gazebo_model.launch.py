@@ -1,44 +1,50 @@
 import os 
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_directory 
 from launch import LaunchDescription 
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-from launch_ros.actions import Node 
+from launch_ros.actions import Node
 import xacro
 
 
 def generate_launch_description():
+    
+    
     robotXacroName='differential_drive_robot'
+    namePackage = 'driverless_robot'
     
-    namePackage='driverless_robot'
-    modelFileRelativePath = 'mode/robot.xacro'
-    worldFileRelativePath = 'model/empty_world.world'
+    nameWorld = 'model/empty_world.world'
     
-    pathModelFile = os.path.join(get_package_share_directory(namePackage), modelFileRelativePath)
-    pathWorldFile = os.path.join(get_package_share_directory(namePackage), modelFileRelativePath)
+    pkg_path = os.path.join(get_package_share_directory('driverless_robot'))
+    xacro_file = os.path.join(pkg_path,'model','robot.xacro')
+    robot_description_config = xacro.process_file(xacro_file).toxml()
     
-    robotDescription = xacro.process_file(pathModelFile).toxml()
+    rsp = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory(namePackage), 'launch', 'model.launch.py'
+        )]), launch_arguments={'use_sim_time':'true'}.items())
     
-    gazebo_rosPackageLaunch=PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py'))
     
-    gazeboLaunch = IncludeLaunchDescription(gazebo_rosPackageLaunch, launch_arguments={'world':pathWorldFile}.items())
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py'
+        )])
+    )
+    
+    
+    
+    #gazeboLaunch = IncludeLaunchDescription(gazebo, launch_arguments={'world':nameWorld}.items())
     
     spawnModelNode=Node(package='gazebo_ros', executable='spawn_entity.py', arguments=['-topic', 'robot_description','-entity', robotXacroName], output='screen')
-    
     
     nodeRobotStatePublisher=Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameter=[{'robot_description':robotDescription,
+        ros_arguments=[{'robot_description':robot_description_config,
                     'use_sim_time': True}]
     )
-    
-    launchDescriptionObject = LaunchDescription()
-    launchDescriptionObject.add_action(gazeboLaunch)
-    launchDescriptionObject.add_action(spawnModelNode)
-    launchDescriptionObject.add_action(nodeRobotStatePublisher)
-    
-    return launchDescriptionObject
-    
+    return LaunchDescription(
+        [rsp,
+        gazebo, spawnModelNode, nodeRobotStatePublisher]
+    )
