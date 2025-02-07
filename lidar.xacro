@@ -1,0 +1,50 @@
+<!--lidar properties (density, location and mass)-->
+
+<xacro:property name='lidar_density' value='1600.0'/>
+
+
+<xacro:property name='lidar_link_radius' value='0.05'/>
+<xacro:property name='lidar_link_length' value='0.04'/>
+<xacro:property name='lidar_link_z_location' value='${body_link_z_dim + 0.175}'/>
+
+
+<xacro:property name='lidar_mass' value='${lidar_density*pi_const*lidar_link_radius*lidar_link_radius*lidar_link_length}'/>
+<!--lidar moment of inertia-->
+
+
+<xacro:property name='Iz_lidar' value='${0.5*lidar_mass*lidar_link_radius*lidar_link_radius}'/>
+<xacro:property name='I_lidar' value='${1.0/12.0*lidar_mass*(3.0*lidar_link_radius*lidar_link_radius+lidar_link_length*lidar_link_length)}'/>
+
+
+<!--lidar inertia -->
+
+<xacro:macro name='inertia_lidar'>
+    <inertial>
+        <origin rpy='0 0 0' xyz='0 0 0'/>
+        <mass value="${lidar_mass}"/>
+        <inertia ixx='${I_lidar}' ixy='0.0' ixz='0.0' iyy='${I_lidar}' iyz='0' izz='${Iz_lidar}'/>
+    </inertial>
+</xacro:macro>
+
+<!--lidar joint and link-->
+<joint name="lidar_joint" type='fixed'>
+    <parent link='body_link'/>
+    <child link='lidar_link'/>
+    <origin xyz='0.1 0 ${lidar_link_z_location}' rpy='0 0 0'/>
+</joint>
+
+
+<link name='lidar_link'>
+    <visual>
+        <geometry>
+            <cylinder radius='${lidar_link_radius}' length='${lidar_link_length}'/>
+        </geometry>
+    </visual>
+    <collision>
+        <geometry>
+            <cylinder radius='${lidar_link_radius}' length='${lidar_link_length}'/>
+        </geometry>
+    </collision>
+
+    <xacro:inertia_lidar/>
+</link>
