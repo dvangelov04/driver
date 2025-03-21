@@ -12,7 +12,7 @@ topicName = '/cmd_vel'
 
 class VelPub(Node):
     def __init__(self):
-        super.__init__('simple')
+        super().__init__('simple')
         self.publisherCreated = self.create_publisher(Twist, topicName, 100)
         self.counter = 0 
         communicationPeriod = 1 
@@ -25,13 +25,20 @@ class VelPub(Node):
     def PublisherCallBack(self):
         twist_msg = Twist()
         
-        if self.counter == 20:
+        
+        if self.counter == 30:
             twist_msg.linear.x = 0
-
+            self.publisherCreated.publish(twist_msg)
+        elif self.counter == 20: 
+            self.counter += 1
+            twist_msg.angular.z == 0.5
+            twist_msg.linear.x = 0.5
+            self.publisherCreated.publish(twist_msg)
         else: 
             self.counter += 1
-            twist_msg.linear.x = 0.2
-        self.publisherCreated.publish(twist_msg)
+            twist_msg.angular.z == 1
+          
+            self.publisherCreated.publish(twist_msg)
 
         # self.get_logger().info('Linear speed: ', "%s" twist_msg.linear.x)
 
@@ -39,7 +46,7 @@ class VelPub(Node):
         
 def main(args=None):
     rclpy.init(args=args)
-    publisherNode = publisherNode()
+    publisherNode = VelPub()
 
     rclpy.spin(publisherNode)
 
