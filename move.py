@@ -31,12 +31,12 @@ class VelPub(Node):
             self.publisherCreated.publish(twist_msg)
         elif self.counter == 20: 
             self.counter += 1
-            twist_msg.angular.z == 0.5
+            twist_msg.angular.z = 0.5
             twist_msg.linear.x = 0.5
             self.publisherCreated.publish(twist_msg)
         else: 
             self.counter += 1
-            twist_msg.angular.z == 1
+            twist_msg.linear.x = 1.0
           
             self.publisherCreated.publish(twist_msg)
 
