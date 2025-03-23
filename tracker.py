@@ -43,9 +43,11 @@ class Tracker(Node):
         if distanceAhead < 1.0:
             twist_msg.linear.x = 0.0
             twist_msg.angular.z = 3.0
+            self.publisherCreated.publish(twist_msg)
         else:
             twist_msg.linear.x = 3.0
             twist_msg.angular.z = 0.0
+            self.publisherCreated.publish(twist_msg)
 
         if self.counter == 30:
             twist_msg.linear.x = 0
