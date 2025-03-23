@@ -40,17 +40,15 @@ class Tracker(Node):
         centerIndex = len(msg.ranges) // 2
         distanceAhead = msg.ranges[centerIndex]
         
-        if distanceAhead < 1.0:
+        if distanceAhead <= 5.0:
             twist_msg.linear.x = 0.0
             twist_msg.angular.z = 3.0
-            self.publisherCreated.publish(twist_msg)
         else:
             twist_msg.linear.x = 3.0
             twist_msg.angular.z = 0.0
-            self.publisherCreated.publish(twist_msg)
 
         if self.counter == 30:
-            twist_msg.linear.x = 0
+            twist_msg.linear.x = 0.0
             self.publisherCreated.publish(twist_msg)
         elif self.counter == 20: 
             self.counter += 1
@@ -59,7 +57,7 @@ class Tracker(Node):
             self.publisherCreated.publish(twist_msg)
         else: 
             self.counter += 1
-            twist_msg.angular.z == 1
+            twist_msg.angular.z == 1.0
           
             self.publisherCreated.publish(twist_msg)
 
@@ -69,11 +67,11 @@ class Tracker(Node):
         
 def main(args=None):
     rclpy.init(args=args)
-    publisherNode = Tracker()
+    node = Tracker()
 
-    rclpy.spin(publisherNode)
+    rclpy.spin(node)
 
-    publisherNode.destroy_node()
+    node.destroy_node()
     rclpy.shutdown()
 
 
