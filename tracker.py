@@ -29,8 +29,8 @@ class Driver(Node):
         vel = Twist()
         
         centerAhead = msg.ranges[0]
-        leftAhead = msg.ranges[-30:0]
-        rightAhead = msg.ranges[0:30]
+        leftAhead = msg.ranges[-30:]
+        rightAhead = msg.ranges[:30]
 
         
         
