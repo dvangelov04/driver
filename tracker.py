@@ -21,27 +21,27 @@ class Driver(Node):
         leftAhead = [r for r in msg.ranges[-30:] if math.isfinite(r)]
         rightAhead = [r for r in msg.ranges[:30] if math.isfinite(r)]
 
-        obstacle_threshold = 5.0
+        # Check for obstacles
+        left_blocked = any(r < 5.0 for r in leftAhead)
+        right_blocked = any(r < 5.0 for r in rightAhead)
 
-        if centerAhead <= obstacle_threshold:
-            left_blocked = any(r <= obstacle_threshold for r in leftAhead)
-            right_blocked = any(r <= obstacle_threshold for r in rightAhead)
-
-            vel.linear.x = 0.0  # Stop forward motion when deciding where to turn
-
-            if not right_blocked:
-                vel.angular.z = -3.0  # turn right
-                self.get_logger().info("Turning right")
-            elif not left_blocked:
-                vel.angular.z = 3.0   # turn left
-                self.get_logger().info("Turning left")
-            else:
-                vel.angular.z = 0.0   # blocked both sides
-                self.get_logger().info("Blocked on all sides, staying still.")
+# Decision logic
+        if left_blocked and not right_blocked:
+            vel.angular.z = -3.0  # Turn right
+            vel.linear.x = 0.0
+            self.get_logger().info("Obstacle on the left — turning right.")
+        elif right_blocked and not left_blocked:
+            vel.angular.z = 3.0   # Turn left
+            vel.linear.x = 0.0
+            self.get_logger().info("Obstacle on the right — turning left.")
+        elif right_blocked and left_blocked:
+            vel.angular.z = 0.0   # No clear path
+            vel.linear.x = 0.0
+            self.get_logger().info("Blocked on both sides — stopping.")
         else:
             vel.linear.x = 3.0
             vel.angular.z = 0.0
-            self.get_logger().info("Path clear. Moving forward.")
+            self.get_logger().info("Path is clear — moving forward.")
 
         self.publisher.publish(vel)
 
