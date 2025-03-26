@@ -28,28 +28,23 @@ class Driver(Node):
         vel = Twist()
         
         centerAhead = msg.ranges[0]
-        leftAhead = msg.ranges[-15:0]
-        rightAhead = msg.ranges[0:15]
+        leftAhead = msg.ranges[-30:0]
+        rightAhead = msg.ranges[0:30]
 
         
 
         if centerAhead <= 5:
-            vel.linear.x = 0.0
-            for i in leftAhead:
-                if i >= 5:
-                    pass
-                else: 
-                    vel.angular.z = -3.0
-
-            for i in rightAhead: 
-                if i >= 5:
-                    pass
-                else: 
-                    vel.angular.z = 3.0
             
+            if min(leftAhead) <= 5.0:
+                vel.angular.z = -3.0 
+            elif min(rightAhead) <= 5.0: 
+                vel.angular.z = 3.0 
+            else: 
+                vel.linear.x = 0.0
+            self.publisher.publish(vel)
         
-        else: 
-            vel.linear.x = 2.0
+        vel.linear.x = 3.0 
+
         
         self.publisher.publish(vel)
 
