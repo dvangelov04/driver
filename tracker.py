@@ -36,14 +36,15 @@ class Driver(Node):
         leftCleaned = [l for l in leftAhead if math.isinf(l)]
         rightCleaned = [r for r in rightAhead if math.isinf(r)]
         if centerAhead <= 5:
-            
-            if min(leftCleaned) <= 5.0:
-                vel.angular.z = -3.0 
-            elif min(rightCleaned) <= 5.0: 
-                vel.angular.z = 3.0 
-            else: 
-                vel.linear.x = 0.0
-            self.publisher.publish(vel)
+            for i in range(len(leftAhead)):
+                if leftAhead[i] <= 5:
+                    vel.angular.z = -3.0
+                elif rightAhead[i] <= 5:
+                    vel.angular.z = 3.0
+                else: 
+                    vel.linear.x = 0.0
+
+                self.publisher.publish(vel)
         
         vel.linear.x = 3.0 
 
