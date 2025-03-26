@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+import math
 from sensor_msgs.msg import LaserScan 
 
 
@@ -32,12 +33,13 @@ class Driver(Node):
         rightAhead = msg.ranges[0:30]
 
         
-
+        leftCleaned = [l for l in leftAhead if math.isinf(l)]
+        rightCleaned = [r for r in rightAhead if math.isinf(r)]
         if centerAhead <= 5:
             
-            if min(leftAhead) <= 5.0:
+            if min(leftCleaned) <= 5.0:
                 vel.angular.z = -3.0 
-            elif min(rightAhead) <= 5.0: 
+            elif min(rightCleaned) <= 5.0: 
                 vel.angular.z = 3.0 
             else: 
                 vel.linear.x = 0.0
