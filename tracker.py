@@ -35,7 +35,7 @@ class Driver(Node):
         
         
         if centerAhead <= 5:
-            for i in range(len(leftAhead)):
+            for i in range(30):
                 if leftAhead[i] <= 5:
                     vel.angular.z = -3.0
                 elif rightAhead[i] <= 5:
