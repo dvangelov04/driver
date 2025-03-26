@@ -31,24 +31,13 @@ class Driver(Node):
         distancesLeft = msg.ranges[-45:]
         distancesRight = msg.ranges[:45]
 
-        if distanceAhead < 10: 
-            if float('inf') in distancesRight: 
-                vel.angular.z = -1.0
-            if float('inf') in distancesLeft: 
-                vel.angular.z = 1.0
-            self.counter += 1
-            self.publisher.publish (vel)
-                
+        if distanceAhead <= 10: 
+            vel.linear.x = 0.0
+            vel.angular.z = 1.5
         else: 
-            
-            vel.linear.x = 1.0 
-            self.counter += 1
-            self.publisher.publish(vel)
-
-
-        if self.counter == 30: 
-            vel = Twist()
-            self.publisher.publish(vel)
+            vel.linear.x = 1.5
+        
+        self.publisher.publish(vel)
 
 
 
