@@ -44,11 +44,13 @@ class Driver(Node):
                     vel.linear.x = 0.0
 
                 self.publisher.publish(vel)
+                
+        else:
         
-        vel.linear.x = 3.0 
-
+            vel.linear.x = 3.0 
+            self.publisher.publish(vel)
         
-        self.publisher.publish(vel)
+            
 
 
 
