@@ -18,7 +18,7 @@ class Driver(Node):
     def __init__(self):
         super().__init__('driverless')
         self.publisher = self.create_publisher(Twist, steering, 100)
-        self.subscribe = self.create_subsciber(LaserScan, lidar, self.velpub 100)
+        self.subscribe = self.create_subscription(LaserScan, lidar, self.velpub, 100)
 
         self.counter = 0 
         
