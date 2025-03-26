@@ -14,8 +14,8 @@ steering = '/cmd_vel'
 lidar = '/scan'
 
 
-class HARD(Node): 
-    def __init(self):
+class Driver(Node): 
+    def __init__(self):
         super().__init__('driverless')
         self.publisher = self.create_publisher(Twist, steering, 100)
         self.subscribe = self.create_subsciber(LaserScan, lidar, self.velpub 100)
@@ -26,6 +26,7 @@ class HARD(Node):
 
     def velpub(self, msg):
         vel = Twist()
+        
         distanceAhead = msg.ranges[0]
         distancesLeft = msg.ranges[-45:]
         distancesRight = msg.ranges[:45]
@@ -55,8 +56,8 @@ class HARD(Node):
 
 
 def main(args=None):
-    rclpy.intit(args=args)
-    node = HARD()
+    rclpy.init(args=args)
+    node = Driver()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
