@@ -33,8 +33,7 @@ class Driver(Node):
         rightAhead = msg.ranges[0:30]
 
         
-        leftCleaned = [l for l in leftAhead if math.isinf(l)]
-        rightCleaned = [r for r in rightAhead if math.isinf(r)]
+        
         if centerAhead <= 5:
             for i in range(len(leftAhead)):
                 if leftAhead[i] <= 5:
