@@ -34,16 +34,21 @@ class Driver(Node):
         sum_right = float(sum(right))
         sum_left = float(sum(left))
 
-        avg_left = sum_left/ len(left)
-        avg_right = sum_right/ len(right)
 
-        error = avg_left - avg_right
+        if centerAhead < 5.0: 
+            avg_left = sum_left/ len(left)
+            avg_right = sum_right/ len(right)
 
-        Kp = 1.5
-        vel.angular.z = -Kp * error   # steer to balance distances
-        vel.linear.x = 2.0 
-       
-        self.publisher.publish(vel)
+            error = avg_left - avg_right
+
+            Kp = 1.5
+            vel.angular.z = -Kp * error   # steer to balance distances
+            self.publisher.publish(vel)
+
+        else:
+            vel.linear.x = 2.0 
+        
+            self.publisher.publish(vel)
 
         
 
