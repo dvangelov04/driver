@@ -31,21 +31,20 @@ class Driver(Node):
         centerAhead = msg.ranges[0]
         left = [r for r in msg.ranges[-180:] if math.isfinite(r)]
         right = [r for r in msg.ranges[:180] if math.isfinite(r)]
-        sum_right = float(sum(right), 5)
-        sum_left = float(sum(left), 5)
+        sum_right = float(sum(right))
+        sum_left = float(sum(left))
 
-        if centerAhead <= 5:
-            if sum_left > sum_right:
-                vel.angular.z = 3.0
-            elif sum_right > sum_left:
-                vel.angular.z = -3.0
-            else: 
-                vel.linear.x = 0.0
-                self.publisher.publish(vel)
-        else:
-        
-            vel.linear.x = 3.0 
-            self.publisher.publish(vel)
+        avg_left = sum_left/ len(left)
+        avg_right = sum_right/ len(right)
+
+        error = avg_left - avg_right
+
+        Kp = 1.5
+        vel.angular.z = -Kp * error   # steer to balance distances
+        vel.linear.x = 2.0 
+       
+        self.publisher.publish(vel)
+
         
 
 
